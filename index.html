@@ -2,71 +2,94 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KF33 SO FULL + WA</title>
+<title>J233 PECENONGAN - PREMIUM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;font-family:system-ui}body{margin:0;background:#f4f4f4}
-header{background:#E30613;color:#fff;padding:12px;text-align:center;font-weight:800;position:sticky;top:0;z-index:10}
-.card{background:#fff;margin:10px;padding:12px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.btn{background:#E30613;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700}
-.btn2{background:#222;color:#fff;border:0;padding:10px 14px;border-radius:10px}
-.btnWA{background:#25D366;color:#fff;border:0;padding:12px 16px;border-radius:10px;font-weight:800;width:100%;font-size:15px}
-input{padding:7px;border:1px solid #ddd;border-radius:8px;width:100%;font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:12px}th{background:#222;color:#fff;padding:8px;text-align:left}td{padding:6px;border-bottom:1px solid #eee}
-.minus{color:#E30613;font-weight:800}.plus{color:#0a7a2b;font-weight:800}
+*{box-sizing:border-box;font-family:'Inter',system-ui}body{margin:0;background:#0f0f0f;color:#fff}
+.header{background:linear-gradient(180deg,#4a0a0a 0%,#0f0f0f 100%);padding:18px 16px 10px;position:sticky;top:0;z-index:10}
+.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:20px;padding:14px;margin:12px}
+.progress{width:118px;height:118px;border-radius:50%;background:conic-gradient(#E30613 var(--p,78%),#2a2a2a 0);display:flex;align-items:center;justify-content:center;position:relative}
+.progress::after{content:'';position:absolute;width:90px;height:90px;background:#1c1c1c;border-radius:50%}
+.progress b{position:relative;z-index:2;font-size:28px;line-height:1;text-align:center}
+.pill{background:#0f2e1a;color:#3dd68c;padding:4px 10px;border-radius:20px;font-size:11px;display:inline-block;margin-top:6px}
+.loss{background:linear-gradient(135deg,#2a0a0a,#1c1c1c);border:1px solid #4a1a1a;border-radius:16px;padding:12px;margin-top:12px}
+.scroll{display:flex;gap:10px;overflow:auto;padding:8px 2px}
+.scard{min-width:120px;background:#242424;border:1px solid #333;border-radius:16px;padding:10px;text-align:center}
+.btn{border:0;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-red{background:#E30613;color:#fff;width:100%}.btn-dark{background:#2a2a2a;color:#fff;border:1px solid #444;width:100%}
+.btnWA{position:fixed;bottom:88px;right:16px;width:64px;height:64px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 0 25px #25D366;z-index:20;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:12px}th{color:#999;padding:10px 6px;text-align:left;font-size:11px}td{padding:10px 6px;border-top:1px solid #262626}
+input{width:100%;background:#0f0f0f;border:1px solid #333;color:#fff;border-radius:8px;padding:7px;font-size:12px;text-align:center}
+.minus{color:#ff5a5a;font-weight:800}.plus{color:#3dd68c;font-weight:800}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#181818;border-top:1px solid #2a2a2a;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:10}
+.nav b{color:#E30613}
 </style>
 </head>
 <body>
-<header>KF33 | KARET PEDURENAN 45 - SO PLU + KIRIM WA</header>
+<div class="header">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;gap:8px;align-items:center"><span style="background:#fff;color:#E30613;font-weight:800;padding:5px 8px;border-radius:8px;font-size:13px">Alfamart</span><b>J233 PECENONGAN</b></div><span>🔍 🔔</span>
+</div>
+<h1 style="font-size:34px;margin:18px 0 2px;line-height:1">Stock Opname</h1>
+<small style="color:#aaa" id="tgl">Sedang Berjalan • Offline</small>
+<div class="card" style="display:flex;gap:16px;margin:16px 0 0">
+<div class="progress" id="prog"><b><span id="pct">0%</span><br><small style="font-size:10px;color:#aaa">Selesai</small></b></div>
+<div style="flex:1"><b>Progress Stok</b><br><small id="progText">0 / 37 Produk</small><br><span class="pill">✅ On Track</span>
+<div class="loss"><small style="color:#aaa">Kerugian Total</small><br><b class="minus" style="font-size:22px">Rp <span id="total">0</span></b><br><small id="minusInfo" style="color:#ff9a9a">0% dari target</small></div>
+</div>
+</div>
+</div>
+
+<div style="padding:4px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">Top 5 Minus</b><small style="color:#E30613" onclick="alert('Full list ada di bawah bro!')">Lihat Semua ></small></div><div class="scroll" id="topScroll"></div></div>
 
 <div class="card">
-<b>TOTAL: <span id="total" style="color:#E30613;font-size:22px">Rp 0</span></b>
-<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-<button class="btn" onclick="save()">💾 Simpan</button>
-<button class="btn2" onclick="exportCSV()">⬇️ Excel</button>
-<button class="btn2" onclick="reset()">🗑️ Reset</button>
+<b>Daftar Selisih J233</b><br><small style="color:#888">37 PLU rawan minus</small>
+<table><thead><tr><th>Produk</th><th>Sys</th><th>Fisik</th><th>Sel</th><th>Rp</th></tr></thead><tbody id="body"></tbody></table>
+<div style="display:flex;gap:10px;margin-top:14px">
+<button class="btn btn-dark" onclick="exportCSV()">⬇️ Excel</button>
+<button class="btn btn-red" onclick="kirimWA()">📲 Kirim WA</button>
 </div>
-<div id="top5" style="margin-top:10px;background:#fff0f0;padding:10px;border-radius:10px;font-size:12px"></div>
-<br>
-<input id="waNumber" placeholder="No WA tujuan (opsional, kosongkan untuk pilih kontak) contoh: 62812xxxx">
-<br><br>
-<button class="btnWA" onclick="kirimWA()">📲 KIRIM LAPORAN KE WA</button>
-<small style="color:#666">*Laporan otomatis isi Top 5 Minus, Total, & Detail PLU</small>
+<input id="waNumber" placeholder="No WA (kosong = pilih kontak)" style="margin-top:10px;text-align:left">
 </div>
+<div style="height:120px"></div>
 
-<div class="card" style="overflow:auto">
-<table><thead><tr><th>SO</th><th>PLU</th><th>DESC</th><th>Sys</th><th>Fisik</th><th>Sel</th><th>Harga</th><th>Rp</th></tr></thead><tbody id="body"></tbody></table>
-</div>
+<div class="btnWA" onclick="kirimWA()">💬</div>
+<div class="nav"><div style="text-align:center"><div>🏠</div><b>Beranda</b></div><div style="text-align:center;color:#666"><div>📦</div>Stok</div><div style="text-align:center;color:#666"><div>📊</div>Laporan</div><div style="text-align:center;color:#666"><div>👤</div>Profil</div></div>
 
 <script>
-let items=[
-[1595,"SILVERQUEEN ALMOND 52G",12000],[5867,"AQUA 1500ML",6000],[113079,"TROPICAL 2L",35000],[118898,"GOOD DAY MOCA",18000],[120333,"PUCUK HARUM 350 ML",4000],[192730,"BIMOLI 2L",34000],[196009,"BEAR BRAND 189ML",9500],[230169,"KINDER JOY BOYS",13000],[230170,"KINDER JOY GIRLS",13000],[244111,"SUNCO 2L",36000],[400552,"ABC MILK COFFE 200ML",3500],[415196,"PAROTI KRIM MESS 200G",12000],[417804,"KANZLER ORI 65G",9000],[417805,"KANZLER KEJU 65G",9000],[423992,"KANZLER HOT 65G",9000],[432393,"GOLDA CAPPUCHINO",3500],[434860,"ORI OMELA",12000],[435578,"KANZLER GOCHU 60G",9000],[435736,"KANZLER BAKSO HOT 48G",7000],[441258,"COLLAGENA 189ML",12000],[443704,"FIESTA SOSIS SPICY",15000],[465771,"KANZLER BAKSO GOCU 55G",9000],[990055,"LE MINERALE 600 ML",3000],[450862,"KAHF ACNE GEL",38000],[450863,"KAHF BRIGHT GEL",38000],[445967,"KAHF ACN&POR SCR",42000],[432462,"KAHF OIL&COMEDO",35000],[423647,"KAHF OIL&ACNE",35000],[423646,"KAHF ENERGIZING",35000],[427902,"KAHF SCRUB EXP",42000],[124502,"SIDOMUNCUL ANGIN",18000],[418604,"RAW CUP ICE 16OZ",4000],[422550,"ALFA ECO PAPER",1500],[414633,"ECO BAG KECIL",500],[413095,"ECO BAG BESAR",1000],[421454,"ALFA TISSUE 220 G",12000],[421456,"ALFA TISSUE 400 G",20000]
-].map(x=>({plu:x[0],desc:x[1],harga:x[2],qSistem:0,qFisik:0,selisih:0,selisihRp:0,sudah:false}));
-const KEY="KF33_SO_FULL_WA_V3";let sv=localStorage.getItem(KEY);if(sv){try{items=JSON.parse(sv);}catch{}}
+const DATA=[
+[1595,"SILVERQUEEN ALMOND 52G",12000],[5867,"AQUA 1500ML",6000],[113079,"TROPICAL 2L",35000],[118898,"GOOD DAY MOCA 10x20G",18000],[120333,"PUCUK HARUM 350 ML",4000],[192730,"BIMOLI 2L",34000],[196009,"BEAR BRAND 189ML",9500],[230169,"KINDER JOY BOYS",13000],[230170,"KINDER JOY GIRLS",13000],[244111,"SUNCO 2L",36000],[400552,"ABC MILK COFFE 200ML",3500],[415196,"PAROTI KRIM MESS 200G",12000],[417804,"KANZLER ORI 65G",9000],[417805,"KANZLER KEJU 65G",9000],[423992,"KANZLER HOT 65G",9000],[432393,"GOLDA CAPPUCHINO",3500],[434860,"ORI OMELA",12000],[435578,"KANZLER GOCHU 60G",9000],[435736,"KANZLER BAKSO HOT 48G",7000],[441258,"COLLAGENA 189ML",12000],[443704,"FIESTA SOSIS SPICY KOREN",15000],[465771,"KANZLER BAKSO GOCU 55G",9000],[990055,"LE MINERALE 600 ML",3000],[450862,"KAHF ACNE GEL 100ML",38000],[450863,"KAHF BRIGHT GEL 100ML",38000],[445967,"KAHF ACN&POR SCR 100ML",42000],[432462,"KAHF OIL&COMEDO 100ML",35000],[423647,"KAHF OIL&ACNE 100ML",35000],[423646,"KAHF ENERGIZING 100ML",35000],[427902,"KAHF SCRUB EXP 100ML",42000],[124502,"SIDOMUNCUL ANGIN 5x15ML",18000],[418604,"RAW CUP ICE 16OZ",4000],[422550,"ALFA ECO PAPER",1500],[414633,"ECO BAG KECIL",500],[413095,"ECO BAG BESAR",1000],[421454,"ALFA TISSUE 220 G",12000],[421456,"ALFA TISSUE 400 G",20000]
+].map(x=>({plu:x[0],desc:x[1],harga:x[2],qSistem:0,qFisik:0,selisih:0,selisihRp:0}));
+
+const KEY="J233_PECENONGAN_FULL37_V6";
+let saved=localStorage.getItem(KEY);if(saved){try{items=JSON.parse(saved);if(items.length==DATA.length)DATA.forEach((d,i)=>{if(items[i]){d.qSistem=items[i].qSistem||0;d.qFisik=items[i].qFisik||0}})}catch{}}
+let items=DATA;
+function iconFor(desc){if(desc.includes("KINDER"))return"🥚";if(desc.includes("SILVERQUEEN"))return"🍫";if(desc.includes("KANZLER"))return"🌭";if(desc.includes("AQUA")||desc.includes("MINERALE"))return"💧";if(desc.includes("TROPICAL")||desc.includes("BIMOLI")||desc.includes("SUNCO"))return"🫒";if(desc.includes("KAHF"))return"🧴";if(desc.includes("TISSUE")||desc.includes("ECO"))return"🧻";return"📦";}
 function render(){
-const tb=document.getElementById("body");tb.innerHTML="";
+const tb=document.getElementById("body");tb.innerHTML="";let tot=0, selesai=0;
 items.forEach((it,i)=>{
-const selQty=(Number(it.qFisik)||0)-(Number(it.qSistem)||0);const selRp=selQty*(Number(it.harga)||0);it.selisih=selQty;it.selisihRp=selRp;
-const tr=document.createElement("tr");
-tr.innerHTML=`<td><input type="checkbox" ${it.sudah?"checked":""} onchange="items[${i}].sudah=this.checked;saveAuto()"></td><td><b>${it.plu}</b></td><td>${it.desc}</td><td><input type="number" value="${it.qSistem}" oninput="items[${i}].qSistem=this.value;calc(${i})"></td><td><input type="number" value="${it.qFisik}" oninput="items[${i}].qFisik=this.value;calc(${i})"></td><td class="${selQty<0?"minus":selQty>0?"plus":""}">${selQty}</td><td><input type="number" value="${it.harga}" oninput="items[${i}].harga=this.value;calc(${i})" style="width:70px"></td><td class="${selRp<0?"minus":"plus"}">${selRp.toLocaleString("id-ID")}</td>`;
-tb.appendChild(tr);
-});update();
+const sel=(Number(it.qFisik)||0)-(Number(it.qSistem)||0);const selRp=sel*(Number(it.harga)||0);it.selisih=sel;it.selisihRp=selRp;tot+=selRp;if(it.qFisik!==""&&it.qFisik!=0||it.qSistem!=0)selesai++;
+tb.innerHTML+=`<tr><td><b style="font-size:11px">${it.desc}</b><br><small style="color:#777">${it.plu}</small></td><td><input type="number" value="${it.qSistem}" oninput="items[${i}].qSistem=this.value;render()"></td><td><input type="number" value="${it.qFisik}" oninput="items[${i}].qFisik=this.value;render()"></td><td class="${sel<0?'minus':sel>0?'plus':''}">${sel}</td><td class="${sel<0?'minus':'plus'}" style="font-size:10px">${selRp==0?'0':(selRp>0?'+':'')+selRp.toLocaleString("id-ID")}</td></tr>`;
+});
+const pct=Math.round(selesai/items.length*100);
+document.getElementById("pct").innerText=pct+"%";document.getElementById("prog").style.setProperty("--p",pct+"%");
+document.getElementById("progText").innerText=`${selesai} / ${items.length} Produk`;
+document.getElementById("total").innerText=Math.abs(tot).toLocaleString("id-ID");
+document.getElementById("tgl").innerText=new Date().toLocaleDateString("id-ID",{day:'numeric',month:'short',year:'numeric'})+" • "+new Date().toLocaleTimeString("id-ID",{hour:'2-digit',minute:'2-digit'})+" • Offline";
+let top=[...items].filter(r=>r.selisih<0).sort((a,b)=>a.selisihRp-b.selisihRp).slice(0,5);
+if(top.length==0)top=[...items].slice(0,5);
+document.getElementById("topScroll").innerHTML=top.map(m=>`<div class="scard"><div style="font-size:28px">${iconFor(m.desc)}</div><div style="font-size:10px;margin:6px 0;height:28px;overflow:hidden">${m.desc}</div><b class="minus">${m.selisih||0} pcs</b><br><small style="color:#888">Rp ${Math.abs(m.selisihRp).toLocaleString("id-ID")}</small></div>`).join("");
+localStorage.setItem(KEY,JSON.stringify(items));
 }
-function calc(i){const it=items[i];const selQty=(Number(it.qFisik)||0)-(Number(it.qSistem)||0);const selRp=selQty*(Number(it.harga)||0);it.selisih=selQty;it.selisihRp=selRp;const row=document.querySelectorAll("#body tr")[i];row.children[5].innerText=selQty;row.children[5].className=selQty<0?"minus":selQty>0?"plus":"";row.children[7].innerText=selRp.toLocaleString("id-ID");row.children[7].className=selRp<0?"minus":"plus";update();saveAuto();}
-function update(){let tot=0;items.forEach(r=>tot+=Number(r.selisihRp)||0);document.getElementById("total").innerText="Rp "+tot.toLocaleString("id-ID");let minus=[...items].filter(r=>r.selisihRp<0).sort((a,b)=>a.selisihRp-b.selisihRp).slice(0,5);let plus=[...items].filter(r=>r.selisihRp>0).sort((a,b)=>b.selisihRp-a.selisihRp).slice(0,5);document.getElementById("top5").innerHTML=`<b>🔴 Top 5 Minus:</b><br>${minus.map(m=>`${m.plu} ${m.desc} (${m.selisih}) = -Rp ${Math.abs(m.selisihRp).toLocaleString("id-ID")}`).join("<br>")||"-"}<br><br><b>🟢 Top 5 Plus:</b><br>${plus.map(m=>`${m.plu} ${m.desc} (${m.selisih}) = +Rp ${m.selisihRp.toLocaleString("id-ID")}`).join("<br>")||"-"}`;}
-function saveAuto(){localStorage.setItem(KEY,JSON.stringify(items));}
-function save(){saveAuto();alert("✅ Kesimpen di HP!");}
-function reset(){if(confirm("Reset?")){items.forEach(r=>{r.qSistem=0;r.qFisik=0;r.sudah=false});localStorage.removeItem(KEY);render();}}
-function exportCSV(){let csv="PLU,DESC,Sistem,Fisik,Selisih,Harga,Selisih Rp\n";items.forEach(r=>csv+=`${r.plu},"${r.desc}",${r.qSistem},${r.qFisik},${r.selisih},${r.harga},${r.selisihRp}\n`);const b=new Blob([csv],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="SO_KF33_WA.csv";a.click();}
 function kirimWA(){
-let tot=items.reduce((s,r)=>s+Number(r.selisihRp),0);
-let minus=[...items].filter(r=>r.selisihRp<0).sort((a,b)=>a.selisihRp-b.selisihRp).slice(0,5);
-let plus=[...items].filter(r=>r.selisihRp>0).sort((a,b)=>b.selisihRp-a.selisihRp).slice(0,5);
-let tgl=new Date().toLocaleDateString("id-ID");
-let pesan=`*LAPORAN SO BARU - KF33 | KARET PEDURENAN 45*\nTanggal: ${tgl}\n\n*TOTAL SELISIH: Rp ${tot.toLocaleString("id-ID")}*\n\n*🔴 TOP 5 MINUS:*\n${minus.map((m,i)=>`${i+1}. ${m.plu} ${m.desc} | ${m.selisih} pcs | -Rp ${Math.abs(m.selisihRp).toLocaleString("id-ID")}`).join("\n")||"-"}\n\n*🟢 TOP 5 PLUS:*\n${plus.map((m,i)=>`${i+1}. ${m.plu} ${m.desc} | ${m.selisih} pcs | +Rp ${m.selisihRp.toLocaleString("id-ID")}`).join("\n")||"-"}\n\n*DETAIL LENGKAP (${items.filter(r=>r.selisih!=0).length} PLU selisih):*\n${items.filter(r=>r.selisih!=0).map(r=>`- ${r.plu} ${r.desc}: Sys ${r.qSistem} vs Fisik ${r.qFisik} = ${r.selisih} pcs (Rp ${r.selisihRp.toLocaleString("id-ID")})`).join("\n")||"Tidak ada selisih"}\n\n_Dikirim dari SO Offline KF33_`;
+let tot=items.reduce((s,r)=>s+r.selisihRp,0);
+let minus=items.filter(r=>r.selisihRp<0).sort((a,b)=>a.selisihRp-b.selisihRp).slice(0,5);
+let pesan=`*LAPORAN SO J233 PECENONGAN*%0ATgl: ${new Date().toLocaleDateString("id-ID")}%0A%0A*TOTAL: Rp ${tot.toLocaleString("id-ID")}*%0A%0A*🔴 TOP 5 MINUS:*%0A${minus.map((m,i)=>`${i+1}. ${m.desc} (${m.plu}) | ${m.selisih} pcs | -Rp ${Math.abs(m.selisihRp).toLocaleString("id-ID")}`).join("%0A")||"-"}%0A%0A*Detail ${items.filter(r=>r.selisih!=0).length} PLU selisih:*%0A${items.filter(r=>r.selisih!=0).map(r=>`- ${r.desc}: ${r.qSistem} vs ${r.qFisik} = ${r.selisih}`).join("%0A")||"Tidak ada"}%0A%0A_Dari App Premium J233_`;
 let no=document.getElementById("waNumber").value.trim();
-let url = no? `https://wa.me/${no}?text=${encodeURIComponent(pesan)}` : `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+let url=no?`https://wa.me/${no}?text=${pesan}`:`https://wa.me/?text=${pesan}`;
 window.open(url,"_blank");
 }
+function exportCSV(){let csv="PLU,DESC,Sistem,Fisik,Selisih,Harga,Selisih Rp\n";items.forEach(r=>csv+=`${r.plu},"${r.desc}",${r.qSistem},${r.qFisik},${r.selisih},${r.harga},${r.selisihRp}\n`);let b=new Blob([csv],{type:"text/csv"});let a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="SO_J233_PECENONGAN_PREMIUM.csv";a.click();}
 render();
 </script>
 </body>
