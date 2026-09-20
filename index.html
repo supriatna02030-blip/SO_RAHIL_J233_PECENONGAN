@@ -1,93 +1,217 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J233 PECENONGAN - Per Tgl</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>J233 V10 - Kunci + Alert Rawan</title>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-*{box-sizing:border-box;font-family:Inter,system-ui}body{margin:0;background:#0f0f0f;color:#fff}
-.header{background:linear-gradient(180deg,#4a0a0a,#0f0f0f);padding:16px;position:sticky;top:0;z-index:10}
-.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:20px;padding:14px;margin:12px}
-.btn{border:0;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}
-.btn-red{background:#E30613;color:#fff}.btn-dark{background:#2a2a2a;color:#fff;border:1px solid #444}
-.btnWA{background:#25D366;color:#fff;padding:10px;border-radius:10px;font-weight:800;border:0;width:100%}
-input,select{background:#0f0f0f;border:1px solid #333;color:#fff;border-radius:10px;padding:10px;width:100%}
-.tab{display:flex;gap:8px;margin:12px}.tab div{flex:1;text-align:center;padding:12px;border-radius:14px;background:#1c1c1c;border:1px solid #2b2b2b;cursor:pointer}.tab div.active{background:#E30613;border-color:#E30613}
-table{width:100%;border-collapse:collapse;font-size:12px}th{color:#888;padding:8px;text-align:left}td{padding:8px;border-top:1px solid #262626}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#0f0f0f;color:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}
+.header{background:linear-gradient(180deg,#4a0a0a,#0f0f0f);padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px));position:sticky;top:0;z-index:20}
+.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:20px;padding:12px;margin:10px}
+.btn{border:0;padding:11px;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-red{background:#E30613;color:#fff}.btn-dark{background:#2a2a2a;color:#fff;border:1px solid #444}.btn-green{background:#25D366;color:#fff}
+input,select{background:#0f0f0f;border:1px solid #333;color:#fff;border-radius:10px;padding:10px;width:100%;font-size:16px}
+.tab{display:flex;gap:8px;margin:10px}.tab div{flex:1;text-align:center;padding:10px;border-radius:12px;background:#1c1c1c;border:1px solid #333;cursor:pointer}.tab div.active{background:#E30613}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}th{color:#888;padding:8px;text-align:left}td{padding:8px;border-top:1px solid #262626}
+td input{width:70px;padding:8px;font-size:14px}
 .minus{color:#ff5a5a;font-weight:800}.plus{color:#3dd68c}
-.histItem{background:#242424;border:1px solid #333;border-radius:16px;padding:14px;margin-bottom:10px}
-.dateBadge{background:#E30613;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.badge{background:#E30613;padding:2px 8px;border-radius:20px;font-size:10px}
+.alertBox{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#ff0000;color:#fff;padding:20px;border-radius:20px;z-index:100;width:85%;max-width:420px;text-align:center;box-shadow:0 0 30px #ff0000;display:none;animation:shake .3s infinite}
+@keyframes shake{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(-51%,-50%)}75%{transform:translate(-49%,-50%)}}
+.locked{opacity:.5}
+.locked .tbl{pointer-events:none}
+tr.blink{animation:blink 1s infinite}@keyframes blink{50%{background:#4a0a0a}}
+#reader{width:100%}
 </style>
 </head>
 <body>
 <div class="header">
-<div style="display:flex;justify-content:space-between"><span style="background:#fff;color:#E30613;padding:4px 8px;border-radius:6px;font-weight:800">Alfamart</span><b>J233 PECENONGAN</b></div>
-<h2 style="margin:12px 0 4px">Stock Opname Per Tanggal</h2>
-<input type="date" id="tglSO" onchange="gantiTanggal()" style="background:#fff;color:#000;font-weight:700">
-<small id="infoTgl" style="color:#aaa;display:block;margin-top:6px"></small>
+<div style="display:flex;justify-content:space-between;align-items:center"><b style="background:#fff;color:#E30613;padding:4px 8px;border-radius:6px">Alfamart</b><b>J233 PECENONGAN</b><span id="lockIcon">🔓</span></div>
+<input type="date" id="tglSO" style="margin-top:10px;background:#fff;color:#000;font-weight:800">
+<div style="display:flex;gap:8px;margin-top:8px">
+<input id="crew" placeholder="👤 Crew SO" style="flex:1"><select id="shift" style="flex:1"><option>Pagi</option><option>Siang</option><option>Malam</option></select>
+</div>
+<small id="jam" style="color:#aaa"></small>
 </div>
 
-<div class="tab"><div id="tabSO" class="active" onclick="switchTab('so')">📦 SO</div><div id="tabHist" onclick="switchTab('hist')">📜 Histori Per Tgl</div></div>
+<div class="tab"><div id="tabSO" class="active" onclick="switchTab('so')">📦 SO</div><div id="tabHist" onclick="switchTab('hist')">📜 Histori</div></div>
 
 <div id="pageSO">
-<div class="card" style="display:flex;justify-content:space-between"><div><small style="color:#aaa">TOTAL TGL INI</small><br><b class="minus" style="font-size:22px">Rp <span id="total">0</span></b></div><div style="text-align:right"><small id="progText" style="color:#aaa">0/37</small><br><b id="pct">0%</b></div></div>
-<div class="card"><table><thead><tr><th>Produk</th><th>Sys</th><th>Fisik</th><th>Sel</th></tr></thead><tbody id="body"></tbody></table>
-<button class="btn btn-red" style="width:100%;margin-top:12px" onclick="simpanPerTgl()">💾 Simpan SO Tanggal Ini</button>
-<button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="exportCSV()">⬇️ Export Excel Tgl Ini</button>
+<div class="card">
+<div style="display:flex;gap:8px"><input id="search" placeholder="🔍 Cari / Scan PLU" oninput="render()" style="flex:1"><button class="btn btn-dark" onclick="startScan()">📷</button></div>
+<div id="reader" style="display:none;margin-top:8px"></div>
+<div style="display:flex;justify-content:space-between;margin-top:10px"><small id="progText" style="color:#aaa">0/37</small><b>Rp <span id="total">0</span></b></div>
+</div>
+<div class="card" id="cardTable"><div class="tbl"><table><thead><tr><th>Produk (⚠️=Rawan)</th><th>Sys</th><th>Fisik</th><th>Sel</th></tr></thead><tbody id="body"></tbody></table></div>
+<button id="btnSimpan" class="btn btn-red" style="width:100%;margin-top:12px" onclick="simpanPerTgl()">💾 Simpan</button>
+<small id="lockMsg" style="color:#ff5a5a;display:none">🔒 Tanggal ini sudah dikunci karena sudah dikirim WA. Hubungi SPV untuk buka kunci.</small>
 </div>
 </div>
 
-<div id="pageHist" style="display:none">
-<div class="card"><b>Histori SO Per Tanggal</b><br><small style="color:#aaa">Pilih tanggal untuk lihat & kirim WA</small><div id="histList" style="margin-top:12px"></div></div>
+<div id="pageHist" style="display:none"><div class="card"><b>Histori (Kunci & Alert)</b><div id="histList" style="margin-top:10px"></div></div></div>
+
+<div id="alertRawan" class="alertBox">
+<div style="font-size:40px">🚨</div><b style="font-size:18px">BARANG RAWAN HILANG!</b><br><span id="alertText"></span><br><br>
+<button class="btn" style="background:#fff;color:#f00;width:100%" onclick="document.getElementById('alertRawan').style.display='none'">OKE, CEK LAGI RAK!</button>
 </div>
 
 <script>
-const DATA=[
-[1595,"SILVERQUEEN ALMOND 52G",12000],[5867,"AQUA 1500ML",6000],[113079,"TROPICAL 2L",35000],[118898,"GOOD DAY MOCA 10x20G",18000],[120333,"PUCUK HARUM 350 ML",4000],[192730,"BIMOLI 2L",34000],[196009,"BEAR BRAND 189ML",9500],[230169,"KINDER JOY BOYS",13000],[230170,"KINDER JOY GIRLS",13000],[244111,"SUNCO 2L",36000],[400552,"ABC MILK COFFE 200ML",3500],[415196,"PAROTI KRIM MESS 200G",12000],[417804,"KANZLER ORI 65G",9000],[417805,"KANZLER KEJU 65G",9000],[423992,"KANZLER HOT 65G",9000],[432393,"GOLDA CAPPUCHINO",3500],[434860,"ORI OMELA",12000],[435578,"KANZLER GOCHU 60G",9000],[435736,"KANZLER BAKSO HOT 48G",7000],[441258,"COLLAGENA 189ML",12000],[443704,"FIESTA SOSIS SPICY",15000],[465771,"KANZLER BAKSO GOCU 55G",9000],[990055,"LE MINERALE 600 ML",3000],[450862,"KAHF ACNE GEL 100ML",38000],[450863,"KAHF BRIGHT GEL 100ML",38000],[445967,"KAHF ACN&POR SCR 100ML",42000],[432462,"KAHF OIL&COMEDO 100ML",35000],[423647,"KAHF OIL&ACNE 100ML",35000],[423646,"KAHF ENERGIZING 100ML",35000],[427902,"KAHF SCRUB EXP 100ML",42000],[124502,"SIDOMUNCUL ANGIN 5x15ML",18000],[418604,"RAW CUP ICE 16OZ",4000],[422550,"ALFA ECO PAPER",1500],[414633,"ECO BAG KECIL",500],[413095,"ECO BAG BESAR",1000],[421454,"ALFA TISSUE 220 G",12000],[421456,"ALFA TISSUE 400 G",20000]
-].map(x=>({plu:x[0],desc:x[1],harga:x[2],qSistem:0,qFisik:0}));
-const KEY_HIST="J233_HISTORI_PER_TGL";
-let hist=JSON.parse(localStorage.getItem(KEY_HIST)||"{}");
-let tglAktif=new Date().toISOString().split('T')[0];
-document.getElementById("tglSO").value=tglAktif;
-function getItemsTgl(tgl){if(hist[tgl]&&hist[tgl].items)return hist[tgl].items;return JSON.parse(JSON.stringify(DATA));}
-let items=getItemsTgl(tglAktif);
+const PIN_SPV="1234"; // GANTI PIN SPV untuk buka kunci
+const RAWAN=[230169,230170,1595,417804,417805,423992,435578,450862,450863,445967]; // PLU rawan
+const DATA=[[1595,"SILVERQUEEN ALMOND 52G",12000],[5867,"AQUA 1500ML",6000],[113079,"TROPICAL 2L",35000],[118898,"GOOD DAY MOCA 10x20G",18000],[120333,"PUCUK HARUM 350 ML",4000],[192730,"BIMOLI 2L",34000],[196009,"BEAR BRAND 189ML",9500],[230169,"KINDER JOY BOYS",13000],[230170,"KINDER JOY GIRLS",13000],[244111,"SUNCO 2L",36000],[400552,"ABC MILK COFFE 200ML",3500],[415196,"PAROTI KRIM MESS 200G",12000],[417804,"KANZLER ORI 65G",9000],[417805,"KANZLER KEJU 65G",9000],[423992,"KANZLER HOT 65G",9000],[432393,"GOLDA CAPPUCHINO",3500],[434860,"ORI OMELA",12000],[435578,"KANZLER GOCHU 60G",9000],[435736,"KANZLER BAKSO HOT 48G",7000],[441258,"COLLAGENA 189ML",12000],[443704,"FIESTA SOSIS SPICY",15000],[465771,"KANZLER BAKSO GOCU 55G",9000],[990055,"LE MINERALE 600 ML",3000],[450862,"KAHF ACNE GEL 100ML",38000],[450863,"KAHF BRIGHT GEL 100ML",38000],[445967,"KAHF ACN&POR SCR 100ML",42000],[432462,"KAHF OIL&COMEDO 100ML",35000],[423647,"KAHF OIL&ACNE 100ML",35000],[423646,"KAHF ENERGIZING 100ML",35000],[427902,"KAHF SCRUB EXP 100ML",42000],[124502,"SIDOMUNCUL ANGIN 5x15ML",18000],[418604,"RAW CUP ICE 16OZ",4000],[422550,"ALFA ECO PAPER",1500],[414633,"ECO BAG KECIL",500],[413095,"ECO BAG BESAR",1000],[421454,"ALFA TISSUE 220 G",12000],[421456,"ALFA TISSUE 400 G",20000]].map(x=>({plu:x[0],desc:x[1],harga:x[2],qSistem:0,qFisik:0,touched:false}));
+
+const KEY_HIST="J233_V9_KUNCI"; // key sama agar data lama tetap terbaca
+let hist={};
+try{hist=JSON.parse(localStorage.getItem(KEY_HIST)||"{}")||{};}catch(e){hist={};}
+function saveStore(){try{localStorage.setItem(KEY_HIST,JSON.stringify(hist));}catch(e){}}
+
+const $=id=>document.getElementById(id);
+const rp=n=>(n<0?"-":"")+"Rp "+Math.abs(n).toLocaleString("id-ID");
+function selOf(it){return (Number(it.qFisik)||0)-(Number(it.qSistem)||0);}
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");} // tanggal lokal, bukan UTC
+function autoShift(){const h=new Date().getHours();return h<14?"Pagi":h<22?"Siang":"Malam";}
+
+let tglAktif=todayStr();$("tglSO").value=tglAktif;$("shift").value=autoShift();
+function getItems(tgl){return hist[tgl]?JSON.parse(JSON.stringify(hist[tgl].items)):JSON.parse(JSON.stringify(DATA));}
+let items=getItems(tglAktif);
+if(hist[tglAktif]){$("crew").value=hist[tglAktif].crew||"";$("shift").value=hist[tglAktif].shift||autoShift();}
+function isLocked(tgl){return !!(hist[tgl]&&hist[tgl].locked);}
+
+function hitung(){let tot=0,selesai=0;items.forEach(it=>{it.selisih=selOf(it);it.selisihRp=it.selisih*it.harga;tot+=it.selisihRp;if((Number(it.qFisik)||0)!==0||(Number(it.qSistem)||0)!==0)selesai++;});return {tot,selesai};}
+function updateSummary(){const {tot,selesai}=hitung();const t=$("total");t.innerText=(tot<0?"-":"")+Math.abs(tot).toLocaleString("id-ID");t.className=tot<0?"minus":"plus";$("progText").innerText=selesai+"/"+items.length;return tot;}
+
 function render(){
-const tb=document.getElementById("body");tb.innerHTML="";let tot=0,selesai=0;
-items.forEach((it,i)=>{const sel=(Number(it.qFisik)||0)-(Number(it.qSistem)||0);const selRp=sel*it.harga;it.selisih=sel;it.selisihRp=selRp;tot+=selRp;if(Number(it.qFisik)!=0||Number(it.qSistem)!=0)selesai++;
-tb.innerHTML+=`<tr><td><b style="font-size:11px">${it.desc}</b><br><small style="color:#666">${it.plu}</small></td><td><input type="number" value="${it.qSistem}" oninput="items[${i}].qSistem=this.value;autoSave()"></td><td><input type="number" value="${it.qFisik}" oninput="items[${i}].qFisik=this.value;autoSave()"></td><td class="${sel<0?'minus':'plus'}">${sel}</td></tr>`;
+const q=$("search").value.toLowerCase().trim();
+const tb=$("body");let html="";
+const locked=isLocked(tglAktif);
+$("cardTable").className=locked?"card locked":"card";
+$("btnSimpan").style.display=locked?"none":"block";
+$("lockMsg").style.display=locked?"block":"none";
+$("lockIcon").innerText=locked?"🔒":"🔓";
+hitung();
+items.forEach((it,i)=>{
+if(q&&!(String(it.plu).includes(q)||it.desc.toLowerCase().includes(q)))return;
+const isR=RAWAN.includes(it.plu);
+html+=`<tr id="r${i}" class="${isR&&it.selisih<0?"blink":""}"><td><b style="font-size:10px">${isR?"⚠️ ":""}${it.desc}</b><br><small style="color:#666">${it.plu}</small></td>
+<td><input type="number" inputmode="numeric" value="${it.qSistem}" ${locked?"disabled":""} onfocus="this.select()" oninput="onEdit(${i},'qSistem',this)" onchange="cekRawan(${i})"></td>
+<td><input type="number" inputmode="numeric" value="${it.qFisik}" ${locked?"disabled":""} onfocus="this.select()" oninput="onEdit(${i},'qFisik',this)" onchange="cekRawan(${i})"></td>
+<td id="s${i}" class="${it.selisih<0?"minus":"plus"}">${it.selisih}</td></tr>`;
 });
-document.getElementById("total").innerText=Math.abs(tot).toLocaleString("id-ID");
-document.getElementById("pct").innerText=Math.round(selesai/items.length*100)+"%";
-document.getElementById("progText").innerText=selesai+"/"+items.length+" Produk";
-document.getElementById("infoTgl").innerText="Edit SO untuk tanggal: "+tglAktif+" • Data auto kesimpen per tanggal";
+tb.innerHTML=html||`<tr><td colspan="4" style="color:#777">Tidak ada produk cocok</td></tr>`;
+updateSummary();tickJam();
 }
-function autoSave(){const tot=items.reduce((s,r)=>s+r.selisihRp,0);hist[tglAktif]={tgl:tglAktif,total:tot,items:JSON.parse(JSON.stringify(items)),update:new Date().toLocaleString("id-ID")};localStorage.setItem(KEY_HIST,JSON.stringify(hist));renderHist();}
-function gantiTanggal(){tglAktif=document.getElementById("tglSO").value;items=getItemsTgl(tglAktif);render();renderHist();}
-function simpanPerTgl(){autoSave();alert("✅ SO tanggal "+tglAktif+" disimpan! Cek di Histori Per Tgl.");switchTab('hist');}
+
+function onEdit(i,field,el){
+if(isLocked(tglAktif))return;
+const it=items[i];it[field]=el.value;
+if(field==="qFisik")it.touched=true;
+it.selisih=selOf(it);it.selisihRp=it.selisih*it.harga;
+const s=$("s"+i);if(s){s.innerText=it.selisih;s.className=it.selisih<0?"minus":"plus";}
+const r=$("r"+i);if(r)r.className=(RAWAN.includes(it.plu)&&it.selisih<0)?"blink":"";
+updateSummary();autoSave();
+}
+
+// Alert hanya muncul setelah input selesai (onchange), dan hanya kalau Fisik sudah diisi
+function cekRawan(i){
+const it=items[i];
+if(!RAWAN.includes(it.plu)||!it.touched)return;
+it.selisih=selOf(it);it.selisihRp=it.selisih*it.harga;
+if(it.selisih<0){
+$("alertText").innerHTML=`<b>${it.desc}</b><br>PLU ${it.plu}<br>Minus ${it.selisih} pcs<br>${rp(it.selisihRp)}<br><br>CEK CCTV & RAK SEKARANG!`;
+$("alertRawan").style.display="block";
+if(navigator.vibrate)navigator.vibrate([200,100,200]);
+beep();
+}
+}
+let actx;
+function beep(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type="square";o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.4);}catch(e){}}
+
+function autoSave(){
+if(isLocked(tglAktif))return;
+const tot=updateSummary();
+hist[tglAktif]={tgl:tglAktif,total:tot,items:JSON.parse(JSON.stringify(items)),crew:$("crew").value,shift:$("shift").value,update:new Date().toLocaleString("id-ID"),locked:false};
+saveStore();renderHist();
+}
+function simpanPerTgl(){autoSave();alert("✅ Disimpan "+tglAktif);}
+
 function renderHist(){
-const div=document.getElementById("histList");const keys=Object.keys(hist).sort().reverse();
-if(keys.length==0){div.innerHTML="<small style='color:#777'>Belum ada data. Simpan SO dulu per tanggal.</small>";return;}
-div.innerHTML=keys.map(k=>{
-const h=hist[k];const jml=h.items.filter(r=>r.selisih!=0).length;
-return `<div class="histItem">
-<div style="display:flex;justify-content:space-between;align-items:center"><span class="dateBadge">📅 ${h.tgl}</span><b class="${h.total<0?'minus':'plus'}">Rp ${h.total.toLocaleString("id-ID")}</b></div>
-<small style="color:#aaa">Update: ${h.update} • ${jml} PLU selisih</small>
-<div style="margin-top:10px;display:flex;gap:8px">
-<button class="btnWA" onclick="bukaTgl('${k}')" style="background:#2a2a2a">📂 Buka</button>
-<button class="btnWA" onclick="kirimWA('${k}')">📲 Kirim WA Tgl ${k}</button>
-</div>
-</div>`;
-}).join("");
+const div=$("histList");const keys=Object.keys(hist).sort().reverse();
+if(keys.length==0){div.innerHTML="<small style='color:#777'>Belum ada histori</small>";return;}
+div.innerHTML=keys.map(k=>{const h=hist[k];const nSel=h.items.filter(r=>selOf(r)!==0).length;return `<div style="background:#242424;border:1px solid #333;border-radius:14px;padding:12px;margin-bottom:10px;${h.locked?'border-color:#ff5a5a':''}">
+<div style="display:flex;justify-content:space-between;gap:6px"><span class="badge">${h.locked?'🔒 KUNCI ':''}📅 ${h.tgl} ${h.shift||""}</span><b class="${h.total<0?'minus':'plus'}">${rp(h.total)}</b></div>
+<small style="color:#aaa">👤 ${h.crew||"-"} • ${h.update} • ${nSel} selisih</small>
+<div style="display:flex;gap:6px;margin-top:8px">
+<button class="btn btn-dark" style="flex:1" onclick="bukaTgl('${k}')">📂 Buka</button>
+<button class="btn btn-green" style="flex:1" onclick="kirimWA('${k}')">📲 WA</button>
+<button class="btn btn-dark" style="flex:.6" onclick="toggleLock('${k}')">${h.locked?'🔓 Buka':'🔒 Kunci'}</button>
+</div></div>`}).join("");
 }
-function bukaTgl(tgl){tglAktif=tgl;document.getElementById("tglSO").value=tgl;items=getItemsTgl(tgl);switchTab('so');render();}
+
+function bukaTgl(tgl){
+tglAktif=tgl;$("tglSO").value=tgl;items=getItems(tgl);
+$("crew").value=hist[tgl]?.crew||"";$("shift").value=hist[tgl]?.shift||autoShift();
+switchTab('so');render();window.scrollTo(0,0);
+}
+
+function toggleLock(tgl){
+const h=hist[tgl];if(!h)return;
+if(h.locked){
+const pin=prompt("Masukkan PIN SPV untuk membuka kunci "+tgl+":");
+if(pin===null)return;
+if(pin!==PIN_SPV){alert("❌ PIN salah");return;}
+h.locked=false;
+}else{h.locked=true;}
+saveStore();render();renderHist();
+alert(h.locked?"🔒 Tanggal "+tgl+" dikunci! Tidak bisa diedit lagi":"🔓 Kunci dibuka untuk "+tgl);
+}
+
 function kirimWA(tgl){
 const h=hist[tgl];if(!h)return;
-const minus=h.items.filter(r=>r.selisih<0).sort((a,b)=>a.selisihRp-b.selisihRp).slice(0,5);
-let pesan=`*LAPORAN SO J233 PECENONGAN*%0A*Tanggal SO: ${h.tgl}*%0AUpdate: ${h.update}%0A%0A*TOTAL: Rp ${h.total.toLocaleString("id-ID")}*%0A%0A*🔴 TOP 5 MINUS TGL ${h.tgl}:*%0A${minus.map((m,i)=>`${i+1}. ${m.desc} (${m.plu}) ${m.selisih} pcs -Rp ${Math.abs(m.selisihRp).toLocaleString("id-ID")}`).join("%0A")||"-"}%0A%0A*DETAIL ${h.items.filter(r=>r.selisih!=0).length} PLU SELISIH:*%0A${h.items.filter(r=>r.selisih!=0).map(r=>`- ${r.desc}: ${r.qSistem} vs ${r.qFisik} = ${r.selisih}`).join("%0A")}`;
-window.open(`https://wa.me/?text=${pesan}`,"_blank");
+const minus=h.items.map(r=>({...r,s:selOf(r)})).filter(r=>r.s<0).sort((a,b)=>a.s*a.harga-b.s*b.harga).slice(0,5);
+const lines=[`*SO J233 PECENONGAN*`,`📅 ${h.tgl} ${h.shift||""} 👤 ${h.crew||"-"}`,`TOTAL: ${rp(h.total)}`,``,`🔴 MINUS:`,...(minus.length?minus.map(m=>`- ${RAWAN.includes(m.plu)?"⚠️ ":""}${m.desc} ${m.s}pcs`):["- (tidak ada)"])];
+window.open("https://wa.me/?text="+encodeURIComponent(lines.join("\n")),"_blank");
+if(!h.locked&&confirm("Kunci tanggal "+tgl+" setelah kirim WA? Biar gak bisa diedit lagi.")){
+h.locked=true;saveStore();renderHist();if(tgl===tglAktif)render();
 }
-function exportCSV(){let csv=`TANGGAL,${tglAktif}\nPLU,DESC,Sistem,Fisik,Selisih,Harga,Rp\n`;items.forEach(r=>csv+=`${r.plu},"${r.desc}",${r.qSistem},${r.qFisik},${r.selisih},${r.harga},${r.selisihRp}\n`);let b=new Blob([csv],{type:"text/csv"});let a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`SO_J233_${tglAktif}.csv`;a.click();}
-function switchTab(t){document.getElementById("pageSO").style.display=t=='so'?'block':'none';document.getElementById("pageHist").style.display=t=='hist'?'block':'none';document.getElementById("tabSO").className=t=='so'?'active':'';document.getElementById("tabHist").className=t=='hist'?'active':'';}
-render();renderHist();
+}
+
+function switchTab(t){
+$("pageSO").style.display=t=='so'?'block':'none';
+$("pageHist").style.display=t=='hist'?'block':'none';
+$("tabSO").className=t=='so'?'active':'';
+$("tabHist").className=t=='hist'?'active':'';
+if(t=='hist')renderHist();
+}
+
+let qr=null,scanning=false;
+async function stopScan(){try{if(qr&&scanning)await qr.stop();}catch(e){}scanning=false;$("reader").style.display="none";}
+async function startScan(){
+if(scanning){stopScan();return;}
+if(typeof Html5Qrcode==="undefined"){alert("Library scanner gagal dimuat. Cek koneksi internet.");return;}
+const r=$("reader");r.style.display="block";
+try{
+if(!qr)qr=new Html5Qrcode("reader");
+await qr.start({facingMode:"environment"},{fps:10,qrbox:{width:220,height:120}},txt=>{$("search").value=txt;render();stopScan();},()=>{});
+scanning=true;
+}catch(e){r.style.display="none";alert("Kamera tidak bisa dibuka: "+e);}
+}
+
+$("tglSO").addEventListener("change",()=>{
+const v=$("tglSO").value;if(!v){$("tglSO").value=tglAktif;return;}
+tglAktif=v;items=getItems(tglAktif);
+if(hist[tglAktif]){$("crew").value=hist[tglAktif].crew||"";$("shift").value=hist[tglAktif].shift||autoShift();}
+else{$("shift").value=autoShift();}
+render();
+});
+$("crew").addEventListener("change",autoSave);
+$("shift").addEventListener("change",autoSave);
+
+function tickJam(){$("jam").innerText="Jam: "+new Date().toLocaleTimeString("id-ID")+" • Crew: "+($("crew").value||"-")+" • Auto shift: "+autoShift();}
+render();renderHist();setInterval(tickJam,1000);
 </script>
 </body>
 </html>
